@@ -63,10 +63,10 @@ int evaluateValue(QueryValue *v, int col, int row, PixImg *target, PixImg *in, P
   switch(v->type)
   {
     case QUERY_VALUE_TYPE_MEMBER:
-      return evaluateMember(&v->member,col,row,target,in,out,err);
+      return evaluateMember(&v->anon.member,col,row,target,in,out,err);
     break;
     case QUERY_VALUE_TYPE_CONSTANT:
-      return evaluateConstant(&v->constant,col,row,target,in,out,err);
+      return evaluateConstant(&v->anon.constant,col,row,target,in,out,err);
     break;
     default:
       //error
@@ -83,64 +83,64 @@ int evaluateExpression(QueryExpression *qexp, int col, int row, PixImg *target, 
       return 0;
       break;
     case QUERY_EXPRESSION_TYPE_OR:
-      return evaluateExpression(qexp->a,col,row,target,in,out,err) || evaluateExpression(qexp->b,col,row,target,in,out,err);
+      return evaluateExpression(qexp->anon.anon.a,col,row,target,in,out,err) || evaluateExpression(qexp->anon.anon.b,col,row,target,in,out,err);
       break;
     case QUERY_EXPRESSION_TYPE_AND:
-      return evaluateExpression(qexp->a,col,row,target,in,out,err) && evaluateExpression(qexp->b,col,row,target,in,out,err);
+      return evaluateExpression(qexp->anon.anon.a,col,row,target,in,out,err) && evaluateExpression(qexp->anon.anon.b,col,row,target,in,out,err);
       break;
     case QUERY_EXPRESSION_TYPE_NOT:
-      return !evaluateExpression(qexp->a,col,row,target,in,out,err);
+      return !evaluateExpression(qexp->anon.anon.a,col,row,target,in,out,err);
       break;
     case QUERY_EXPRESSION_TYPE_EQ:
-      return evaluateExpression(qexp->a,col,row,target,in,out,err) == evaluateExpression(qexp->b,col,row,target,in,out,err);
+      return evaluateExpression(qexp->anon.anon.a,col,row,target,in,out,err) == evaluateExpression(qexp->anon.anon.b,col,row,target,in,out,err);
       break;
     case QUERY_EXPRESSION_TYPE_NE:
-      return evaluateExpression(qexp->a,col,row,target,in,out,err) != evaluateExpression(qexp->b,col,row,target,in,out,err);
+      return evaluateExpression(qexp->anon.anon.a,col,row,target,in,out,err) != evaluateExpression(qexp->anon.anon.b,col,row,target,in,out,err);
       break;
     case QUERY_EXPRESSION_TYPE_LT:
-      return evaluateExpression(qexp->a,col,row,target,in,out,err) < evaluateExpression(qexp->b,col,row,target,in,out,err);
+      return evaluateExpression(qexp->anon.anon.a,col,row,target,in,out,err) < evaluateExpression(qexp->anon.anon.b,col,row,target,in,out,err);
       break;
     case QUERY_EXPRESSION_TYPE_LTE:
-      return evaluateExpression(qexp->a,col,row,target,in,out,err) <= evaluateExpression(qexp->b,col,row,target,in,out,err);
+      return evaluateExpression(qexp->anon.anon.a,col,row,target,in,out,err) <= evaluateExpression(qexp->anon.anon.b,col,row,target,in,out,err);
       break;
     case QUERY_EXPRESSION_TYPE_GTE:
-      return evaluateExpression(qexp->a,col,row,target,in,out,err) >= evaluateExpression(qexp->b,col,row,target,in,out,err);
+      return evaluateExpression(qexp->anon.anon.a,col,row,target,in,out,err) >= evaluateExpression(qexp->anon.anon.b,col,row,target,in,out,err);
       break;
     case QUERY_EXPRESSION_TYPE_GT:
-      return evaluateExpression(qexp->a,col,row,target,in,out,err) > evaluateExpression(qexp->b,col,row,target,in,out,err);
+      return evaluateExpression(qexp->anon.anon.a,col,row,target,in,out,err) > evaluateExpression(qexp->anon.anon.b,col,row,target,in,out,err);
       break;
     case QUERY_EXPRESSION_TYPE_SUB:
-      return evaluateExpression(qexp->a,col,row,target,in,out,err) - evaluateExpression(qexp->b,col,row,target,in,out,err);
+      return evaluateExpression(qexp->anon.anon.a,col,row,target,in,out,err) - evaluateExpression(qexp->anon.anon.b,col,row,target,in,out,err);
       break;
     case QUERY_EXPRESSION_TYPE_ADD:
-      return evaluateExpression(qexp->a,col,row,target,in,out,err) + evaluateExpression(qexp->b,col,row,target,in,out,err);
+      return evaluateExpression(qexp->anon.anon.a,col,row,target,in,out,err) + evaluateExpression(qexp->anon.anon.b,col,row,target,in,out,err);
       break;
     case QUERY_EXPRESSION_TYPE_DIV:
-      return evaluateExpression(qexp->a,col,row,target,in,out,err) / evaluateExpression(qexp->b,col,row,target,in,out,err);
+      return evaluateExpression(qexp->anon.anon.a,col,row,target,in,out,err) / evaluateExpression(qexp->anon.anon.b,col,row,target,in,out,err);
       break;
     case QUERY_EXPRESSION_TYPE_MUL:
-      return evaluateExpression(qexp->a,col,row,target,in,out,err) * evaluateExpression(qexp->b,col,row,target,in,out,err);
+      return evaluateExpression(qexp->anon.anon.a,col,row,target,in,out,err) * evaluateExpression(qexp->anon.anon.b,col,row,target,in,out,err);
       break;
     case QUERY_EXPRESSION_TYPE_MOD:
-      return evaluateExpression(qexp->a,col,row,target,in,out,err) % evaluateExpression(qexp->b,col,row,target,in,out,err);
+      return evaluateExpression(qexp->anon.anon.a,col,row,target,in,out,err) % evaluateExpression(qexp->anon.anon.b,col,row,target,in,out,err);
       break;
     case QUERY_EXPRESSION_TYPE_SIN:
-      return sin(evaluateExpression(qexp->a,col,row,target,in,out,err));
+      return 0;//sin(evaluateExpression(qexp->anon.anon.a,col,row,target,in,out,err));
       break;
     case QUERY_EXPRESSION_TYPE_COS:
-      return cos(evaluateExpression(qexp->a,col,row,target,in,out,err));
+      return 0;//cos(evaluateExpression(qexp->anon.anon.a,col,row,target,in,out,err));
       break;
     case QUERY_EXPRESSION_TYPE_TAN:
-      return tan(evaluateExpression(qexp->a,col,row,target,in,out,err));
+      return 0;//tan(evaluateExpression(qexp->anon.anon.a,col,row,target,in,out,err));
       break;
     case QUERY_EXPRESSION_TYPE_ABS:
-      return abs(evaluateExpression(qexp->a,col,row,target,in,out,err));
+      return 0;//abs(evaluateExpression(qexp->anon.anon.a,col,row,target,in,out,err));
       break;
     case QUERY_EXPRESSION_TYPE_NEG:
-      return -1 * evaluateExpression(qexp->a,col,row,target,in,out,err);
+      return -1 * evaluateExpression(qexp->anon.anon.a,col,row,target,in,out,err);
       break;
     case QUERY_EXPRESSION_TYPE_VALUE:
-      return evaluateValue(&qexp->v,col,row,target,in,out,err);
+      return evaluateValue(&qexp->anon.v,col,row,target,in,out,err);
       break;
     default:
       //error

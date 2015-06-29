@@ -82,27 +82,30 @@ typedef struct
   struct QueryExpression *row;
   struct QueryExpression *col;
 } QueryMember;
+typedef union
+{
+  QueryConstant constant;
+  QueryMember member;
+} anon_q_val_union;
 typedef struct
 {
   QUERY_VALUE_TYPE type;
-  union
-  {
-    QueryConstant constant;
-    QueryMember member;
-  };
+  anon_q_val_union anon;
 } QueryValue;
+typedef struct
+{
+  struct QueryExpression *a;
+  struct QueryExpression *b;
+} anon_q_exp_union_struct;
+typedef union
+{
+  anon_q_exp_union_struct anon;
+  QueryValue v;
+} anon_q_exp_union;
 typedef struct QueryExpression
 {
   QUERY_EXPRESSION_TYPE type;
-  union
-  {
-    struct
-    {
-      struct QueryExpression *a;
-      struct QueryExpression *b;
-    };
-    QueryValue v;
-  };
+  anon_q_exp_union anon;
 } QueryExpression;
 typedef struct
 {

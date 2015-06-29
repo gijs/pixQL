@@ -9,7 +9,8 @@ void initTokens()
 
   //for brevety
   const int *ls = query_operation_token_oo_lvls;
-  char ***lls = &query_operation_tokens_of_oo_lvl[0];
+  query_operation_tokens_of_oo_lvl = malloc(sizeof(char **) *QUERY_NUM_OO_LEVELS);
+  char ***lls = query_operation_tokens_of_oo_lvl;
 
   int c  = 0;
   int si = 0;
@@ -74,7 +75,7 @@ const int query_operation_token_oo_lvls[] = //manually keep in sync!
   8, //"ABS",
   0  //""
 };
-char **query_operation_tokens_of_oo_lvl[QUERY_NUM_OO_LEVELS];
+char ***query_operation_tokens_of_oo_lvl;
 const char *query_property_tokens[] =
 {
   "row",

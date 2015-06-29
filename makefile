@@ -3,7 +3,7 @@ SRCDIR = .
 OUTFILE = pixql
 CC = gcc
 DEBUGGER = gdb -q
-CFLAGS = -Wall
+CFLAGS = -Wall -std=c99
 LFLAGS = -Wall
 DEBUGFLAGS = -ggdb3 -O0
 PRODFLAGS = -O3

@@ -95,9 +95,9 @@ static int parseIntoExpression(char *q, int s, int e, int level, QueryExpression
       l = lastTokenLevelInRange(q,s,e,level);
       if(l >= 0)
       {
-        qexp->a = calloc(sizeof(QueryExpression),1);
+        qexp->anon.anon.a = calloc(sizeof(QueryExpression),1);
 
-        l = parseIntoExpression(q, o, o+l, level, qexp->a, err);
+        l = parseIntoExpression(q, o, o+l, level, qexp->anon.anon.a, err);
         switch(err->type)
         {
           case QUERY_ERROR_TYPE_PARSE: QERRORPASS; break;
@@ -128,8 +128,8 @@ static int parseIntoExpression(char *q, int s, int e, int level, QueryExpression
           else QERROR(QUERY_ERROR_TYPE_PARSE,"Error parsing expression, expected operator");
 
           commit;
-          qexp->b = calloc(sizeof(QueryExpression),1);
-          l = parseIntoExpression(q, o, e, level+1, qexp->b, err);
+          qexp->anon.anon.b = calloc(sizeof(QueryExpression),1);
+          l = parseIntoExpression(q, o, e, level+1, qexp->anon.anon.b, err);
           switch(err->type)
           {
             case QUERY_ERROR_TYPE_PARSE: QERRORPASS; break;
@@ -157,8 +157,8 @@ static int parseIntoExpression(char *q, int s, int e, int level, QueryExpression
       {
         commit;
         qexp->type = QUERY_EXPRESSION_TYPE_NOT;
-        qexp->a = calloc(sizeof(QueryExpression),1);
-        l = parseIntoExpression(q, o, e, level, qexp->a, err);
+        qexp->anon.anon.a = calloc(sizeof(QueryExpression),1);
+        l = parseIntoExpression(q, o, e, level, qexp->anon.anon.a, err);
         switch(err->type)
         {
           case QUERY_ERROR_TYPE_PARSE: QERRORPASS; break;
@@ -188,8 +188,8 @@ static int parseIntoExpression(char *q, int s, int e, int level, QueryExpression
         else if(teq("cos")) qexp->type = QUERY_EXPRESSION_TYPE_COS;
         else if(teq("tan")) qexp->type = QUERY_EXPRESSION_TYPE_TAN;
         else if(teq("abs")) qexp->type = QUERY_EXPRESSION_TYPE_ABS;
-        qexp->a = calloc(sizeof(QueryExpression),1);
-        l = parseIntoExpression(q, o, e, level, qexp->a, err);
+        qexp->anon.anon.a = calloc(sizeof(QueryExpression),1);
+        l = parseIntoExpression(q, o, e, level, qexp->anon.anon.a, err);
         switch(err->type)
         {
           case QUERY_ERROR_TYPE_PARSE: QERRORPASS; break;
@@ -243,7 +243,7 @@ static int parseIntoExpression(char *q, int s, int e, int level, QueryExpression
     case 10: // value
     {
       qexp->type = QUERY_EXPRESSION_TYPE_VALUE;
-      l = parseIntoValue(q,o,e,&qexp->v,err);
+      l = parseIntoValue(q,o,e,&qexp->anon.v,err);
       switch(err->type)
       {
         case QUERY_ERROR_TYPE_PARSE: QERRORPASS; break;
@@ -366,7 +366,7 @@ static int parseIntoValue(char *q, int s, int e, QueryValue *v, QueryError *err)
 {
   basictokinit;
 
-  l = parseIntoConstant(q,o,e,&v->constant,err);
+  l = parseIntoConstant(q,o,e,&v->anon.constant,err);
   switch(err->type)
   {
     case QUERY_ERROR_TYPE_PARSE: QERRORPASS; break;
@@ -378,7 +378,7 @@ static int parseIntoValue(char *q, int s, int e, QueryValue *v, QueryError *err)
     break;
   }
 
-  l = parseIntoMember(q,o,e,&v->member,err);
+  l = parseIntoMember(q,o,e,&v->anon.member,err);
   switch(err->type)
   {
     case QUERY_ERROR_TYPE_PARSE: QERRORPASS; break;
@@ -535,9 +535,9 @@ static int parseSelections(char *q, int s, int e, QueryProcedure *pro, QueryErro
           sel->selecting = QUERY_TARGET_IN;
           //ridiculous...
           sel->exp.type = QUERY_EXPRESSION_TYPE_VALUE;
-          sel->exp.v.type = QUERY_VALUE_TYPE_CONSTANT;
-          sel->exp.v.constant.type = QUERY_CONSTANT_TYPE_NUMBER;
-          sel->exp.v.constant.value = 1;
+          sel->exp.anon.v.type = QUERY_VALUE_TYPE_CONSTANT;
+          sel->exp.anon.v.anon.constant.type = QUERY_CONSTANT_TYPE_NUMBER;
+          sel->exp.anon.v.anon.constant.value = 1;
         }
         else
           pro->n_selections--;
@@ -641,13 +641,13 @@ static int parseIntoInit(char *q, int s, int e, QueryInit *init, QueryError *err
   else
   {
     init->width.type = QUERY_EXPRESSION_TYPE_VALUE;
-    init->width.v.type = QUERY_VALUE_TYPE_CONSTANT;
-    init->width.v.constant.type = QUERY_CONSTANT_TYPE_NUMBER;
-    init->width.v.constant.value = 0;
+    init->width.anon.v.type = QUERY_VALUE_TYPE_CONSTANT;
+    init->width.anon.v.anon.constant.type = QUERY_CONSTANT_TYPE_NUMBER;
+    init->width.anon.v.anon.constant.value = 0;
     init->height.type = QUERY_EXPRESSION_TYPE_VALUE;
-    init->height.v.type = QUERY_VALUE_TYPE_CONSTANT;
-    init->height.v.constant.type = QUERY_CONSTANT_TYPE_NUMBER;
-    init->height.v.constant.value = 0;
+    init->height.anon.v.type = QUERY_VALUE_TYPE_CONSTANT;
+    init->height.anon.v.anon.constant.type = QUERY_CONSTANT_TYPE_NUMBER;
+    init->height.anon.v.anon.constant.value = 0;
   }
 
   return o-s;
@@ -665,13 +665,13 @@ static int parseInit(char *q, int s, int e, Query *query, QueryError *err)
       query->init.type = QUERY_INIT_TYPE_COPY;
       //ridiculous...
       query->init.width.type = QUERY_EXPRESSION_TYPE_VALUE;
-      query->init.width.v.type = QUERY_VALUE_TYPE_CONSTANT;
-      query->init.width.v.constant.type = QUERY_CONSTANT_TYPE_NUMBER;
-      query->init.width.v.constant.value = 0;
+      query->init.width.anon.v.type = QUERY_VALUE_TYPE_CONSTANT;
+      query->init.width.anon.v.anon.constant.type = QUERY_CONSTANT_TYPE_NUMBER;
+      query->init.width.anon.v.anon.constant.value = 0;
       query->init.height.type = QUERY_EXPRESSION_TYPE_VALUE;
-      query->init.height.v.type = QUERY_VALUE_TYPE_CONSTANT;
-      query->init.height.v.constant.type = QUERY_CONSTANT_TYPE_NUMBER;
-      query->init.height.v.constant.value = 0;
+      query->init.height.anon.v.type = QUERY_VALUE_TYPE_CONSTANT;
+      query->init.height.anon.v.anon.constant.type = QUERY_CONSTANT_TYPE_NUMBER;
+      query->init.height.anon.v.anon.constant.value = 0;
       QERRORCLEAN;
       break;
     case QUERY_ERROR_TYPE_NONE:
@@ -810,10 +810,10 @@ static void freeValueContents(QueryValue *qval)
   switch(qval->type)
   {
     case QUERY_VALUE_TYPE_MEMBER:
-      freeMemberContents(&qval->member);
+      freeMemberContents(&qval->anon.member);
       break;
     case QUERY_VALUE_TYPE_CONSTANT:
-      freeConstantContents(&qval->constant);
+      freeConstantContents(&qval->anon.constant);
       break;
     case QUERY_VALUE_TYPE_INVALID:
     default:
@@ -839,12 +839,12 @@ static void freeExpressionContents(QueryExpression *qexp)
     case QUERY_EXPRESSION_TYPE_DIV:
     case QUERY_EXPRESSION_TYPE_MUL:
     case QUERY_EXPRESSION_TYPE_MOD:
-      freeExpressionContents(qexp->a);
-      free(qexp->a);
-      qexp->a = 0;
-      freeExpressionContents(qexp->b);
-      free(qexp->b);
-      qexp->b = 0;
+      freeExpressionContents(qexp->anon.anon.a);
+      free(qexp->anon.anon.a);
+      qexp->anon.anon.a = 0;
+      freeExpressionContents(qexp->anon.anon.b);
+      free(qexp->anon.anon.b);
+      qexp->anon.anon.b = 0;
       break;
     case QUERY_EXPRESSION_TYPE_NOT:
     case QUERY_EXPRESSION_TYPE_SIN:
@@ -852,12 +852,12 @@ static void freeExpressionContents(QueryExpression *qexp)
     case QUERY_EXPRESSION_TYPE_TAN:
     case QUERY_EXPRESSION_TYPE_ABS:
     case QUERY_EXPRESSION_TYPE_NEG:
-      freeExpressionContents(qexp->a);
-      free(qexp->a);
-      qexp->a = 0;
+      freeExpressionContents(qexp->anon.anon.a);
+      free(qexp->anon.anon.a);
+      qexp->anon.anon.a = 0;
       break;
     case QUERY_EXPRESSION_TYPE_VALUE:
-      freeValueContents(&qexp->v);
+      freeValueContents(&qexp->anon.v);
     default: break;
   }
   qexp->type = 0;
